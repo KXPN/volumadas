@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Configuración - Volumadas</title>
+    <link rel="stylesheet" href="configuracion.css"/>
+  </head>
+  <body>
+    <header>
+      <h1>Configuración - Volumadas</h1>
+      <h2>Administración</h2>
+      <button type="button" class="correcto jsGuardar">
+        Guardar
+      </button>
+      <button type="button" class="jsExportar">
+        Exportar
+      </button>
+      <button type="button" class="jsImportar">
+        Importar
+      </button>
+      <button type="button" class="jsRestaurar">
+        Restaurar
+      </button>
+    </header>
+    <form>
+      <h2>Volumen inicial</h2>
+      <input type="range" name="volumen" min="0" max="1" step="0.1" value="1"/>
+      <h2>Posición</h2>
+      <label>
+        <input type="radio" name="posicion" value="izquierda"/>
+        Izquierda
+      </label>
+      <label>
+        <input type="radio" name="posicion" value="derecha"/>
+        Derecha
+      </label>
+      <h2>Opacidad</h2>
+      <input
+        type="range"
+        name="opacidad"
+        min="0.1"
+        max="1"
+        step="0.1"
+        value="0.5"
+      />
+      <h2>Prefijo</h2>
+      <input type="text" name="prefijo" placeholder="Con " value="Con "/>
+      <h2>Sufijo</h2>
+      <input
+        type="text"
+        name="sufijo"
+        placeholder=". Al terminar devuelvo la llamada"
+        value=". Al terminar devuelvo la llamada"
+      />
+      <h2>Personas ignoradas</h2>
+      <div>
+        <div class="jsBase" hidden="hidden">
+          <input
+            type="text"
+            data-name="personasIgnoradas[]"
+            placeholder="Nombre a ignorar"
+          />
+          <button type="button" class="jsQuitarElemento">
+            -
+          </button>
+        </div>
+        <button type="button" class="jsAgregarElemento">
+          +
+        </button>
+      </div>
+      <h2>Personas renombradas</h2>
+      <div>
+        <div class="jsBase" hidden="hidden">
+          <input
+            type="text"
+            data-name="personasRenombradas[0][]"
+            placeholder="Persona a renombrar"
+          />
+          <input
+            type="text"
+            data-name="personasRenombradas[0][]"
+            placeholder="Persona renombrada"
+          />
+          <button type="button" class="jsQuitarElemento">
+            -
+          </button>
+        </div>
+        <button type="button" class="jsAgregarElemento">
+          +
+        </button>
+      </div>
+    </form>
+    <script src="configuracion.js"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "Volumadas",
+  "description": "",
+  "version": "1.0",
+  "manifest_version": 2,
+  "permissions": ["storage"],
+  "options_ui": {
+    "page": "configuracion.html"
+  },
+  "applications": {
+    "gecko": {
+      "id": "addon@example.com"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["volumadas.js"]
+    },
+    {
+      "matches": ["https://hangouts.google.com/*/call/*"],
+      "js": ["volumadas.js"]
+    }
+  ],
+  "icons": {
+    "16": "icono_16.png",
+    "48": "icono_48.png",
+    "128": "icono_128.png"
+  }
+}
