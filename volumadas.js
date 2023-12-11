@@ -38,7 +38,7 @@ const Volumadas = {
   },
   copiarParticipantes: function() {
     let selectores = {
-      'meet.google.com': '[data-resolution-cap] [data-self-name]',
+      'meet.google.com': '[data-self-name] [role=tooltip]',
       'hangouts.google.com': '[data-participant-id] div:nth-child(2)',
     };
     let selector = selectores[window.location.host];
