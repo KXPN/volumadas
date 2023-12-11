@@ -147,4 +147,15 @@ const Volumadas = {
   },
 };
 
-browser.storage.sync.get('opciones').then(Volumadas.inicializar.bind(Volumadas));
+if (typeof browser === 'undefined') {
+  var browser = chrome;
+}
+if (browser.storage) {
+  browser.storage.sync.get('opciones', iniciarVolumadas);
+} else {
+  iniciarVolumadas({});
+}
+
+function iniciarVolumadas(opciones) {
+  Volumadas.inicializar.call(Volumadas, opciones);
+}
