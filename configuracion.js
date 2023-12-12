@@ -219,4 +219,7 @@ const Configuracion = {
     return (hayCambios ? 'Quieres salir sin guardar cambios?' : null);
   },
 };
+if (typeof browser === 'undefined') {
+  var browser = chrome;
+}
 Configuracion.inicializar();
