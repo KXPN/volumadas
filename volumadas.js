@@ -38,7 +38,7 @@ const Volumadas = {
   },
   copiarParticipantes: function() {
     let selectores = {
-      'meet.google.com': '[data-self-name] [role=tooltip]',
+      'meet.google.com': '[class=notranslate]',
       'hangouts.google.com': '[data-participant-id] div:nth-child(2)',
     };
     let selector = selectores[window.location.host];
@@ -51,10 +51,7 @@ const Volumadas = {
       apodosPorAsistente[renombramiento[0]] = renombramiento[1];
     }
     document.querySelectorAll(selector).forEach(function(dNombre) {
-      if (!dNombre.childNodes.length) {
-        return;
-      }
-      let nombre = dNombre.childNodes[0].textContent.trim();
+      let nombre = dNombre.textContent.trim();
       if (!nombre) {
         return;
       }
