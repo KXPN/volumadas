@@ -4,6 +4,12 @@ const Volumadas = {
   sufijo: '',
   personasIgnoradas: [],
   personasRenombradas: [],
+  selectoresPorNombre: {
+    listaParticipante: (
+      '[data-panel-container-id=sidePanel1] [data-participant-id]'
+    ),
+    participantesListaIcono: '[data-panel-id][data-promo-anchor-id] i',
+  },
   ajustarVolumen: function() {
     let volumen = this.dBarraVolumen.value;
     let colores = ['red', 'green'];
@@ -37,6 +43,27 @@ const Volumadas = {
     this.aplicarEstilos(dVolumadas, estilos);
   },
   copiarParticipantes: function() {
+    let dTextarea = document.createElement('textarea');
+    dTextarea.value = (this.prefijo + 'INDETERMINADO' + this.sufijo);
+    document.body.appendChild(dTextarea);
+    dTextarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(dTextarea);
+    let dParticipantesListaIcono = (
+      document.querySelector(this.selectoresPorNombre.participantesListaIcono)
+    );
+    if (!dParticipantesListaIcono) {
+      return;
+    }
+    dParticipantesListaIcono.click();
+    dParticipantesListaIcono.click();
+    let dListaParticipantes = (
+      document.querySelectorAll(this.selectoresPorNombre.listaParticipante)
+    );
+    if (!dListaParticipantes.length) {
+      setTimeout(this.copiarParticipantes.bind(this));
+      return;
+    }
     let selectores = {
       'meet.google.com': '[class=notranslate]',
       'hangouts.google.com': '[data-participant-id] div:nth-child(2)',
@@ -50,21 +77,31 @@ const Volumadas = {
       let renombramiento = personasRenombradas[personaRenombradaIndice];
       apodosPorAsistente[renombramiento[0]] = renombramiento[1];
     }
-    document.querySelectorAll(selector).forEach(function(dNombre) {
-      let nombre = dNombre.textContent.trim();
-      if (!nombre) {
-        return;
-      }
-      if (personasIgnoradas.indexOf(nombre) >= 0) {
-        return;
-      }
-      asistentes.push(apodosPorAsistente[nombre] || nombre);
-    });
-    let dTextarea = document.createElement('textarea');
+    let participantesPorNombre = {};
+    (
+      dListaParticipantes
+      .forEach(
+        function(dParticipante) {
+          let nombre = dParticipante.querySelector('span').textContent.trim();
+          if (!nombre) {
+            return;
+          }
+          if (personasIgnoradas.indexOf(nombre) >= 0) {
+            return;
+          }
+          if (participantesPorNombre[nombre]) {
+            return;
+          }
+          participantesPorNombre[nombre] = true;
+          asistentes.push(apodosPorAsistente[nombre] || nombre);
+        },
+      )
+    );
+    dTextarea = document.createElement('textarea');
     dTextarea.value = (
-      asistentes.length ?
-      (this.prefijo + asistentes.join(', ') + this.sufijo) :
-      ' '
+      this.prefijo +
+      (asistentes.length ? asistentes.join(', ') : 'INDETERMINADO') +
+      this.sufijo
     );
     document.body.appendChild(dTextarea);
     dTextarea.select();
