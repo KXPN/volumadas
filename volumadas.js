@@ -120,8 +120,21 @@ const Volumadas = {
         sufijo: '. Al terminar devuelvo la llamada',
       };
     }
-    this.prefijo = opciones['prefijo'];
-    this.sufijo = opciones['sufijo'];
+    const windowLocation = window.location;
+    const reunionEnlace = (windowLocation.origin + windowLocation.pathname);
+    const reunionEnlaceVariableExpresionRegular = (
+      new RegExp('\\\[REUNION_ENLACE\\\]', 'g')
+    );
+    this.prefijo = (
+      opciones
+      .prefijo
+      .replace(reunionEnlaceVariableExpresionRegular, reunionEnlace)
+    );
+    this.sufijo = (
+      opciones
+      .sufijo
+      .replace(reunionEnlaceVariableExpresionRegular, reunionEnlace)
+    );
     this.personasIgnoradas = opciones['personasIgnoradas[]'];
     this.personasRenombradas = opciones['personasRenombradas[]'];
     let dVolumadas = document.createElement('div');
