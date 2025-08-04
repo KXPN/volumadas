@@ -38,7 +38,7 @@ const Configuracion = {
     for (let opcionNombre in opciones) {
       if (opcionNombre.indexOf('[]') < 0) {
         let dOpcion = document.querySelector('[name="' + opcionNombre + '"]');
-        if (dOpcion.type !== 'radio') {
+        if ((dOpcion.type !== 'checkbox') && (dOpcion.type !== 'radio')) {
           dOpcion.value = (
             opciones[opcionNombre]
           );

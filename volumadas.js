@@ -5,6 +5,8 @@ const Volumadas = {
   personasIgnoradas: [],
   personasRenombradas: [],
   selectoresPorNombre: {
+    informacionCita: '[data-show-watermarking] i',
+    informacionIcono: '[data-panel-id="5"] i',
     listaParticipante: (
       '[data-panel-container-id=sidePanel1] [data-participant-id]'
     ),
@@ -19,6 +21,37 @@ const Volumadas = {
     document.querySelectorAll('audio').forEach(function(dAudio) {
       dAudio.volume = volumen;
     });
+    if (
+      this.volumenFueModificado ||
+      !this.debeMantenerSilenciadoHastaCitaInicio
+    ) {
+      return;
+    }
+    const dInformacionIcono = (
+      document.querySelector(this.selectoresPorNombre.informacionIcono)
+    );
+    if (!dInformacionIcono) {
+      return;
+    }
+    dInformacionIcono.click();
+    dInformacionIcono.click();
+    const dCita = (
+      document.querySelector(this.selectoresPorNombre.informacionCita)
+    );
+    if (!dCita) {
+      return;
+    }
+    this.dBarraVolumen.value = 0;
+    const cita = dCita.parentElement.innerText;
+    const coincidencias = cita.match(/(\d+:\d+)( [AP]M)?/);
+    const horaPartes = coincidencias[1].split(':');
+    const horas = parseInt(horaPartes[0]);
+    const minutos = parseInt(horaPartes[1]);
+    const horasEnFormato24 = (horas + (coincidencias[2] ? 12 : 0));
+    this.citaHora = ((horasEnFormato24 * 100) + minutos);
+    this.verificacionCitaHoraIntervalo = (
+      setInterval(this.quitarSilencioSiEsCitaHora.bind(this), 100)
+    );
   },
   aplicarAtributos: function(dElemento, atributos) {
     for (let atributoNombre in atributos) {
@@ -108,10 +141,28 @@ const Volumadas = {
     document.execCommand('copy');
     document.body.removeChild(dTextarea);
   },
+  quitarSilencioSiEsCitaHora: function() {
+    const fechaActual = new Date();
+    const horaActual = (
+      (fechaActual.getHours() * 100) +
+      fechaActual.getMinutes()
+    );
+    const citaHora = this.citaHora;
+    if (horaActual < citaHora) {
+      return;
+    }
+    clearInterval(this.verificacionCitaHoraIntervalo);
+    this.volumenFueModificado = true;
+    this.dBarraVolumen.value = this.volumenPorDefecto;
+  },
+  marcarVolumenModificado: function() {
+    this.volumenFueModificado = true;
+  },
   inicializar: function({opciones}) {
     if (opciones === undefined) {
       opciones = {
         volumen: 1,
+        debeMantenerSilenciadoHastaCitaInicio: 0,
         posicion: 'izquierda',
         opacidad: 0.5,
         'personasIgnoradas[]': ['Tú', 'Presentación'],
@@ -124,6 +175,10 @@ const Volumadas = {
     const reunionEnlace = (windowLocation.origin + windowLocation.pathname);
     const reunionEnlaceVariableExpresionRegular = (
       new RegExp('\\\[REUNION_ENLACE\\\]', 'g')
+    );
+    this.volumenPorDefecto = opciones.volumen;
+    this.debeMantenerSilenciadoHastaCitaInicio = (
+      opciones.debeMantenerSilenciadoHastaCitaInicio
     );
     this.prefijo = (
       opciones
@@ -151,6 +206,10 @@ const Volumadas = {
     }
     this.aplicarEstilos(dVolumadas, estilos);
     let dBarraVolumen = document.createElement('input');
+    (
+      dBarraVolumen
+      .addEventListener('change', this.marcarVolumenModificado.bind(this))
+    );
     this.aplicarAtributos(dBarraVolumen, {
       max: 1,
       min: 0,
@@ -190,7 +249,8 @@ const Volumadas = {
     dVolumadas.appendChild(dCambiarPosicion);
     dCambiarPosicion.addEventListener('click', this.cambiarPosicion.bind(this));
     document.body.appendChild(dVolumadas);
-    setInterval(this.ajustarVolumen.bind(this), 1);
+
+    setInterval(this.ajustarVolumen.bind(this));
   },
 };
 
