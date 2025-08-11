@@ -43,14 +43,16 @@ const Volumadas = {
     }
     const cita = dCita.parentElement.innerText;
     const coincidencias = cita.match(/(\d+:\d+)( [AP]M)?/);
+    if (!coincidencias) {
+      this.ponerVolumenPorDefecto.call(this);
+      return;
+    }
     const horaPartes = coincidencias[1].split(':');
     const horas = parseInt(horaPartes[0]);
     const minutos = parseInt(horaPartes[1]);
     const horasEnFormato24 = (horas + (coincidencias[2] ? 12 : 0));
     this.citaHora = ((horasEnFormato24 * 100) + minutos);
-    this.verificacionCitaHoraIntervalo = (
-      setInterval(this.quitarSilencioSiEsCitaHora.bind(this), 100)
-    );
+    this.quitarSilencioSiEsCitaHora.call(this);
   },
   aplicarAtributos: function(dElemento, atributos) {
     for (let atributoNombre in atributos) {
@@ -150,7 +152,9 @@ const Volumadas = {
     if (horaActual < citaHora) {
       return;
     }
-    clearInterval(this.verificacionCitaHoraIntervalo);
+    this.ponerVolumenPorDefecto.call(this);
+  },
+  ponerVolumenPorDefecto: function() {
     this.volumenFueModificado = true;
     this.dBarraVolumen.value = this.volumenPorDefecto;
   },
@@ -205,11 +209,6 @@ const Volumadas = {
     }
     this.aplicarEstilos(dVolumadas, estilos);
     let dBarraVolumen = document.createElement('input');
-    dBarraVolumen.value = (
-      this.debeMantenerSilenciadoHastaCitaInicio ?
-      0 :
-      opciones.volumen
-    );
     (
       dBarraVolumen
       .addEventListener('change', this.marcarVolumenModificado.bind(this))
@@ -219,7 +218,11 @@ const Volumadas = {
       min: 0,
       step: 0.01,
       type: 'range',
-      value: opciones.volumen,
+      value: (
+        this.debeMantenerSilenciadoHastaCitaInicio ?
+        0 :
+        opciones.volumen
+      ),
     });
     this.aplicarEstilos(dBarraVolumen, {
       cursor: 'pointer',
