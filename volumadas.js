@@ -41,7 +41,6 @@ const Volumadas = {
     if (!dCita) {
       return;
     }
-    this.dBarraVolumen.value = 0;
     const cita = dCita.parentElement.innerText;
     const coincidencias = cita.match(/(\d+:\d+)( [AP]M)?/);
     const horaPartes = coincidencias[1].split(':');
@@ -176,10 +175,10 @@ const Volumadas = {
     const reunionEnlaceVariableExpresionRegular = (
       new RegExp('\\\[REUNION_ENLACE\\\]', 'g')
     );
-    this.volumenPorDefecto = opciones.volumen;
     this.debeMantenerSilenciadoHastaCitaInicio = (
       opciones.debeMantenerSilenciadoHastaCitaInicio
     );
+    this.volumenPorDefecto = opciones.volumen;
     this.prefijo = (
       opciones
       .prefijo
@@ -206,6 +205,11 @@ const Volumadas = {
     }
     this.aplicarEstilos(dVolumadas, estilos);
     let dBarraVolumen = document.createElement('input');
+    dBarraVolumen.value = (
+      this.debeMantenerSilenciadoHastaCitaInicio ?
+      0 :
+      opciones.volumen
+    );
     (
       dBarraVolumen
       .addEventListener('change', this.marcarVolumenModificado.bind(this))
