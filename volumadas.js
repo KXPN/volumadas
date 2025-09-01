@@ -33,8 +33,11 @@ const Volumadas = {
     if (!dInformacionIcono) {
       return;
     }
-    dInformacionIcono.click();
-    dInformacionIcono.click();
+    if (!this.informacionFueAbierta) {
+      dInformacionIcono.click();
+      dInformacionIcono.click();
+      this.informacionFueAbierta = true;
+    }
     const dCita = (
       document.querySelector(this.selectoresPorNombre.informacionCita)
     );
