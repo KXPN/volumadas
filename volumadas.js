@@ -4,13 +4,14 @@ const Volumadas = {
   sufijo: '',
   personasIgnoradas: [],
   personasRenombradas: [],
+
   selectoresPorNombre: {
     informacionCita: '[data-show-watermarking] i',
     informacionIcono: '[data-panel-id="5"] i',
     listaParticipante: (
       '[data-panel-container-id=sidePanel1] [data-participant-id]'
     ),
-    participantesListaIcono: '[data-panel-id][data-promo-anchor-id] i',
+    participantesListaIcono: '[data-avatar-count]',
   },
   ajustarVolumen: function() {
     let volumen = this.dBarraVolumen.value;
