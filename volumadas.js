@@ -94,7 +94,6 @@ const Volumadas = {
       return;
     }
     dParticipantesListaIcono.click();
-    dParticipantesListaIcono.click();
     let dListaParticipantes = (
       document.querySelectorAll(this.selectoresPorNombre.listaParticipante)
     );
@@ -102,6 +101,7 @@ const Volumadas = {
       setTimeout(this.copiarParticipantes.bind(this));
       return;
     }
+    dParticipantesListaIcono.click();
     let selectores = {
       'meet.google.com': '[class=notranslate]',
       'hangouts.google.com': '[data-participant-id] div:nth-child(2)',
